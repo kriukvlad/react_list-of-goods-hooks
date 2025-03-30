@@ -15,18 +15,20 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_FIELDS_ALPHABET = 'alphabetically';
-const SORT_FIELDS_LENGTH = 'length';
+enum SortType {
+  SORT_FIELDS_ALPHABET = 'alphabetically',
+  SORT_FIELDS_LENGTH = 'length',
+}
 
-function getPrepared(goods: string[], sortField: string) {
+function getPrepared(goods: string[], sortField: SortType) {
   const preparedGoods = [...goods];
 
   switch (sortField) {
-    case SORT_FIELDS_ALPHABET:
+    case SortType.SORT_FIELDS_ALPHABET:
       preparedGoods.sort((a, b) => a.localeCompare(b));
       break;
 
-    case SORT_FIELDS_LENGTH:
+    case SortType.SORT_FIELDS_LENGTH:
       preparedGoods.sort((a, b) => a.length - b.length);
       break;
 
@@ -38,9 +40,9 @@ function getPrepared(goods: string[], sortField: string) {
 }
 
 export const App: React.FC = () => {
-  const [sortField, setSortField] = useState('');
+  const [sortField, setSortField] = useState<SortType | ''>('');
   const [reversed, setReversed] = useState(false);
-  let visibleGoods = getPrepared(goodsFromServer, sortField);
+  let visibleGoods = getPrepared(goodsFromServer, sortField as SortType);
 
   if (reversed) {
     visibleGoods = [...visibleGoods].reverse();
@@ -52,11 +54,11 @@ export const App: React.FC = () => {
         <button
           type="button"
           className={
-            sortField === SORT_FIELDS_ALPHABET
+            sortField === SortType.SORT_FIELDS_ALPHABET
               ? 'button is-info'
               : 'button is-info is-light'
           }
-          onClick={() => setSortField(SORT_FIELDS_ALPHABET)}
+          onClick={() => setSortField(SortType.SORT_FIELDS_ALPHABET)}
         >
           Sort alphabetically
         </button>
@@ -64,11 +66,11 @@ export const App: React.FC = () => {
         <button
           type="button"
           className={
-            sortField === SORT_FIELDS_LENGTH
+            sortField === SortType.SORT_FIELDS_LENGTH
               ? 'button is-success'
               : 'button is-success is-light'
           }
-          onClick={() => setSortField(SORT_FIELDS_LENGTH)}
+          onClick={() => setSortField(SortType.SORT_FIELDS_LENGTH)}
         >
           Sort by length
         </button>
